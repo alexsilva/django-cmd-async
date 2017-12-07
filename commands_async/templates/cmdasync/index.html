@@ -12,22 +12,19 @@
         $(document).ready(function(){
             $(".dropdown-menu > li > a").on('click', function () {
                 var value = $(this).attr("href");
-
-                //alert("change: " + value);
-
-                $("#dropdownTaskMenu > span.info").html(value);
+                $("#dropdownTaskMenu").find("> span.info").html(value);
             });
         });
     </script>
 {% endblock %}
 
 {% block body %}
-<form> {{form}} </form>
-
 <div class="container">
-    <div class="panel panel-default">
+    <div class="panel panel-default {% if form.errors %}panel-danger{% else %}panel-success{% endif %}">
+        <div class="panel-heading">{% if form.errors %}{{ form.errors }}{% endif %}</div>
         <div class="panel-body">
-            <form class="navbar-form navbar-left" role="search">
+            <form class="navbar-form navbar-left" role="search" action="." method="post">
+                {% csrf_token %}
                 <div class="form-group">
                     <div class="dropdown">
                         <button class="btn btn-default btn-sm dropdown-toggle"
