@@ -1,8 +1,13 @@
 {% extends "cmdasync/base.html" %}
+{% load staticfiles %}
 
 {% block title %}Run tasks{% endblock %}
 
 {% block extrahead %}
+       <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{% static "cmdasync/styles.css" %}">
+
+
     <script type="application/javascript" xmlns="http://www.w3.org/1999/html">
         $(document).ready(function(){
             $(".dropdown-menu > li > a").on('click', function () {
