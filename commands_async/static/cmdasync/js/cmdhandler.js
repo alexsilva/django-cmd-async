@@ -4,7 +4,8 @@ cmdayncform = {
         this.update = true;
         this.running = false;
         this.successAjaxArr = [];
-        this.onUpdateFinishArr = []
+        this.onUpdateFinishArr = [];
+        this.$form = null;
     },
     request: function(task_id) {
         if (!this.running)
@@ -26,7 +27,7 @@ cmdayncform = {
                     $output.append(task.traceback)
                 }
                 self.running = false;
-                self.exc_fnarr(self.onUpdateFinishArr);
+                self.exc_fnarr(self.onUpdateFinishArr, self.$form);
             } else if (self.update) {
                 // new update check
                 setTimeout(function () {
@@ -35,7 +36,7 @@ cmdayncform = {
                 }, 1000);
             } else {
                 self.running = false;
-                this.exc_fnarr(self.onUpdateFinishArr);
+                self.exc_fnarr(self.onUpdateFinishArr, self.$form);
             }
         });
         req.fail(function () {
@@ -81,7 +82,7 @@ cmdayncform = {
         options.success = function(responseText, statusText, xhr, $form) {
             self.exc_fnarr(self.successAjaxArr, responseText, statusText, xhr, $form);
         };
-        $(elem).ajaxForm(options);
+        this.$form = $(elem).ajaxForm(options);
         return options;
     }
 };

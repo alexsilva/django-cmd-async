@@ -22,16 +22,25 @@
 
             cmdayncform.ajax("form#taskform", {
                 beforeSubmit: function(arr, $form, options) {
-                    var form = $("form#taskform");
-                    var $button = form.find('button[type=submit]');
-                    $button.addClass('disabled')
+                    var $button = $form.find('button[type=submit]');
+                    $button.addClass('disabled');
+
+                    var $btnCancel = $("#btn-form-cancel");
+                    $btnCancel.removeClass('disabled');
+                    $btnCancel.click(function() {
+                        cmdayncform.update_abort();
+                        $(this).addClass('disabled');
+                    });
+
+                    $("#btn-form-revoke").removeClass('disabled')
                 }
             });
 
-            cmdayncform.add_ajax_update_finish(function(){
-                var form = $("form#taskform");
+            cmdayncform.add_ajax_update_finish(function(form) {
                 var $button = form.find('button[type=submit]');
-                $button.removeClass('disabled')
+                $button.removeClass('disabled');
+                $("#btn-form-cancel").addClass('disabled');
+                $("#btn-form-revoke").addClass('disabled')
             })
         });
     </script>
@@ -44,29 +53,24 @@
         <div class="panel-body">
             <form class="navbar-form navbar-left" id="taskform" action="." method="post">{% csrf_token %}
                 <div class="form-group">
-                    <div class="dropdown">
-                        <button class="btn btn-default btn-sm dropdown-toggle"
-                                type="button"
-                                id="dropdownTaskMenu"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="true">
-                            <span class="info">Choose one</span>
-                            <span class="glyphicon glyphicon-menu-down"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownTaskMenu">
-                        {% for app_name, values in commands.items %}
-                            <li class="dropdown-header">{{ app_name|upper }}</li>
-                            {% for cmd in values %}
-                                <li><a href="#{{ app_name }}.{{ cmd }}">{{ cmd|lower }}</a></li>
-                            {% endfor %}
-                            <li role="separator" class="divider"></li>
-                        {% endfor %}
-                        </ul>
+                    <div class="btn-group" role="group">
+                        <div class="btn-group" role="group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="checkbox" aria-label="realtime">
+                                </span>
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-default btn-md">Execute</button>
+                                </span>
+                                {% include "cmdasync/form-dropdown.html" %}
+                            </div>
+
+                        </div>
+                        {{ form.as_ul }}
+                        <input type="button" id="btn-form-cancel" class="btn btn-warning btn-md disabled" value="Cancel">
+                        <input type="button" id="btn-form-revoke" class="btn btn-danger btn-md disabled" value="Revoke">
                     </div>
-                    {{ form.as_ul }}
                 </div>
-                <button type="submit" class="btn btn-default">Execute</button>
             </form>
         </div>
         <div class="panel-footer">
