@@ -23,10 +23,11 @@ cmdaync = {
                 } else {
                     $output.append(task.traceback)
                 }
+                self.running = false;
             } else if (self.update) {
                 // new update check
-                self.running = true;
                 setTimeout(function () {
+                    self.running = true;
                     self.request(task_id)
                 }, 1000);
             } else {
@@ -41,7 +42,7 @@ cmdaync = {
       this.$output.empty();
     },
     update_abort: function () {
-        this.update = false;
+        this.update = !this.running;
     },
     ajaxform: function (elem) {
         var self = this;
