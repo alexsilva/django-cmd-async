@@ -30,6 +30,8 @@
             cmdayncform.ajax("form#taskform", {
                 beforeSubmit: function(arr, $form, options) {
                     var $button = $form.find('button[type=submit]');
+                    if ($button.hasClass('disabled'))
+                        return false;
                     $button.addClass('disabled');
 
                     var $btnCancel = $("#btn-form-cancel");
