@@ -13,7 +13,14 @@
 
             $(".dropdown-menu > li > a").on('click', function () {
                 var value = $(this).attr("href");
-                $("#dropdownTaskMenu").find("> span.info").html(value);
+                value = value.substring(1, value.length);
+
+                var items = value.split(".");
+                var app_command = items[items.length-1];
+                var app_name = items.slice(0, -1).join(".").toUpperCase();
+
+                $("#form-app_name").html(app_name);
+                $("#dropdownTaskMenu").find("> span.info").html(app_command);
                 $("input#id_app_command").val(value);
                 // stop status update
                 cmdayncform.update_abort();
@@ -65,14 +72,13 @@
                                 <span class="input-group-addon">
                                     <input type="checkbox" aria-label="realtime">
                                 </span>
-                                <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-default btn-md">Execute</button>
-                                </span>
+                                <span class="input-group-addon" id="form-app_name">CELERY</span>
                                 {% include "cmdasync/form-dropdown.html" %}
                             </div>
 
                         </div>
                         {{ form.as_ul }}
+                        <button type="submit" class="btn btn-default btn-md">Execute</button>
                         <input type="button" id="btn-form-cancel" class="btn btn-warning btn-md disabled" value="Cancel">
                         <input type="button" id="btn-form-revoke" class="btn btn-danger btn-md disabled" value="Revoke">
                     </div>
@@ -80,7 +86,9 @@
             </form>
         </div>
         <div class="panel-footer">
-            <pre id="taskOutput">OUTPUT</pre>
+            <div class="well-lg">
+                <pre id="taskOutput">OUTPUT</pre>
+            </div>
         </div>
     </div>
 </div>

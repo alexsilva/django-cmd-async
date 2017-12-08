@@ -1,3 +1,4 @@
+import collections
 from celery.task.control import revoke
 
 from django.http import JsonResponse
@@ -20,13 +21,17 @@ class TaskFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super(TaskFormView, self).get_context_data(**kwargs)
 
-        commands = {}
+        commands = collections.OrderedDict()
         commands_all = get_commands()
 
         # merge
         for name in commands_all:
             items = commands.setdefault(commands_all[name], [])
             items.append(name)
+
+        # order
+        for key in commands:
+            commands[key].sort()
 
         context['commands'] = commands
         return context
