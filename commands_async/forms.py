@@ -8,6 +8,10 @@ class TaskForm(forms.Form):
                                   required=True,
                                   widget=forms.HiddenInput())
 
+    params = forms.CharField(max_length=350,
+                             widget=forms.HiddenInput(),
+                             required=False)
+
     def __init__(self, *args, **kwargs):
         super(TaskForm, self).__init__(*args, **kwargs)
         self.app_name = None

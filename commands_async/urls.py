@@ -7,7 +7,7 @@ __author__ = 'alex'
 
 
 cmd_patterns = ([
-    url(r'^$', views.TaskFormView.as_view(), name='index'),
+    url(r'^$', never_cache(views.TaskFormView.as_view()), name='index'),
     url(r'^status/(?P<task_id>.*)', never_cache(views.TaskFormStatus.as_view()), name='status')
 ], 'cmd-async')
 
