@@ -6,20 +6,20 @@
 {% block extrahead %}
        <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="{% static "cmdasync/styles.css" %}">
+    <script type="application/javascript" src="{% static "cmdasync/js/cmdhandler.js" %}"></script>
+    <script type="application/javascript">
+        $(document).ready(function () {
+            cmdaync.init("#taskOutput");
 
-
-    <script type="application/javascript" xmlns="http://www.w3.org/1999/html">
-        $(document).ready(function(){
             $(".dropdown-menu > li > a").on('click', function () {
                 var value = $(this).attr("href");
                 $("#dropdownTaskMenu").find("> span.info").html(value);
                 $("input#id_app_command").val(value);
+                // stop status update
+                cmdaync.update_abort();
+                cmdaync.clear_output();
             });
-            $("form#taskform").ajaxForm({
-                success: function(data) {
-                    alert(data)
-                }
-            });
+            cmdaync.ajaxform("form#taskform")
         });
     </script>
 {% endblock %}
