@@ -32,22 +32,28 @@
                         $(this).addClass('disabled');
                     });
 
-                    $("#btn-form-revoke").removeClass('disabled')
+                    var $btnRevoke = $("#btn-form-revoke");
+                    $btnRevoke.removeClass('disabled');
+                    $btnRevoke.click(cmdayncform.revoke_task.bind(cmdayncform));
                 }
             });
 
             cmdayncform.add_ajax_update_finish(function(form) {
                 var $button = form.find('button[type=submit]');
                 $button.removeClass('disabled');
-                $("#btn-form-cancel").addClass('disabled');
-                $("#btn-form-revoke").addClass('disabled')
+                var $btnCancel = $("#btn-form-cancel");
+                $btnCancel.addClass('disabled');
+                $btnCancel.unbind("click"); // avoid stack grow
+                var $btnRevoke = $("#btn-form-revoke");
+                $btnRevoke.addClass('disabled');
+                $btnRevoke.unbind("click");
             })
         });
     </script>
 {% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="container-fluid">
     <div class="panel panel-default {% if form.errors %}panel-danger{% else %}panel-success{% endif %}">
         {% if form.errors %}<div class="panel-heading">{{ form.errors }}</div>{% endif %}
         <div class="panel-body">

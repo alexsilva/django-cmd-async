@@ -1,4 +1,8 @@
 cmdayncform = {
+    csrfSafeMethod: function(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    },
     init: function (outputelem) {
         this.$output = $(outputelem);
         this.update = true;
@@ -6,6 +10,7 @@ cmdayncform = {
         this.successAjaxArr = [];
         this.onUpdateFinishArr = [];
         this.$form = null;
+        this.taskid = null;
     },
     request: function(task_id) {
         if (!this.running)
@@ -43,7 +48,23 @@ cmdayncform = {
 
         });
     },
-
+    revoke_task : function () {
+        var self = this;
+        var csrftoken = $("input[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "status/" + this.taskid,
+            beforeSend: function(xhr, settings) {
+                if (!self.csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function(data) {
+                if (!data.status) alert(data.error);
+            }
+        })
+    },
     clear_output: function () {
       this.$output.empty();
     },
@@ -62,6 +83,7 @@ cmdayncform = {
 
     on_ajax_success : function (data) {
         var task = data.task;
+        this.taskid = task.id;
         this.request(task.id);
     },
 

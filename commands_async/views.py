@@ -1,3 +1,5 @@
+from celery.task.control import revoke
+
 from django.http import JsonResponse
 from django.views.generic import FormView, View
 from celery.result import AsyncResult
@@ -58,4 +60,13 @@ class TaskFormStatus(View):
         else:
             data['task']['failed'] = False
             data['task']['output'] = async_result.result
+        return JsonResponse(data)
+
+    def post(self, request, **kwargs):
+        task_id = kwargs.get('task_id')
+        try:
+            revoke(task_id, terminate=True)
+            data = {"status": True}
+        except Exception as err:
+            data = {"status": False, "error": str(err)}
         return JsonResponse(data)
