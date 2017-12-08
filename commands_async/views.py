@@ -1,7 +1,9 @@
+from django.http import JsonResponse
 from django.views.generic import FormView
 
 from .forms import TaskForm
 from django.core.management import get_commands
+from .tasks import command_exec
 
 
 class TaskFormView(FormView):
@@ -25,3 +27,11 @@ class TaskFormView(FormView):
 
         context['commands'] = commands
         return context
+
+    def form_valid(self, form):
+        """Executes the task"""
+        app_command = form.cleaned_data['app_command']
+        task = command_exec.delay(app_command)
+        return JsonResponse({
+            'task': task.id
+        })

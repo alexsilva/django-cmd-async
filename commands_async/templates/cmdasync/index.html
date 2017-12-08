@@ -13,6 +13,12 @@
             $(".dropdown-menu > li > a").on('click', function () {
                 var value = $(this).attr("href");
                 $("#dropdownTaskMenu").find("> span.info").html(value);
+                $("input#id_app_command").val(value);
+            });
+            $("form#taskform").ajaxForm({
+                success: function(data) {
+                    alert(data)
+                }
             });
         });
     </script>
@@ -23,8 +29,7 @@
     <div class="panel panel-default {% if form.errors %}panel-danger{% else %}panel-success{% endif %}">
         <div class="panel-heading">{% if form.errors %}{{ form.errors }}{% endif %}</div>
         <div class="panel-body">
-            <form class="navbar-form navbar-left" role="search" action="." method="post">
-                {% csrf_token %}
+            <form class="navbar-form navbar-left" id="taskform" action="." method="post">{% csrf_token %}
                 <div class="form-group">
                     <div class="dropdown">
                         <button class="btn btn-default btn-sm dropdown-toggle"
@@ -45,8 +50,8 @@
                             <li role="separator" class="divider"></li>
                         {% endfor %}
                         </ul>
-
                     </div>
+                    {{ form.as_ul }}
                 </div>
                 <button type="submit" class="btn btn-default">Execute</button>
             </form>
