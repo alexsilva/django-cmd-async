@@ -27,7 +27,7 @@
 {% block body %}
 <div class="container">
     <div class="panel panel-default {% if form.errors %}panel-danger{% else %}panel-success{% endif %}">
-        <div class="panel-heading">{% if form.errors %}{{ form.errors }}{% endif %}</div>
+        {% if form.errors %}<div class="panel-heading">{{ form.errors }}</div>{% endif %}
         <div class="panel-body">
             <form class="navbar-form navbar-left" id="taskform" action="." method="post">{% csrf_token %}
                 <div class="form-group">
