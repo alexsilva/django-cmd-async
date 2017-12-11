@@ -1,14 +1,14 @@
 <div class="dropdown">
     <button class="btn btn-default btn-md dropdown-toggle"
             type="button"
-            id="dropdownTaskMenu"
+            id="task-app-command"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="true">
         <span class="info">Choose one</span>
         <span class="glyphicon glyphicon-menu-down"></span>
     </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownTaskMenu">
+    <ul class="dropdown-menu" aria-labelledby="task-app-command">
         {% for app_name, values in commands.items %}
             <li class="dropdown-header">{{ app_name|upper }}</li>
             {% for cmd in values %}

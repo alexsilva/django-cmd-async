@@ -36,10 +36,19 @@ class TaskFormView(FormView):
         context['commands'] = commands
         return context
 
+    def form_invalid(self, form):
+        return JsonResponse({
+            'form': {
+                'errors': form.errors
+            }
+        }, status=400)
+
     def form_valid(self, form):
         """Executes the task"""
         app_command = form.cleaned_data['app_command']
-        task = command_exec.delay(app_command)
+        command_args = form.cleaned_data['args']
+        command_kwargs = form.cleaned_data['kwargs']
+        task = command_exec.delay(app_command, *command_args, **command_kwargs)
         return JsonResponse({
             'task': {
                 'id': task.id
