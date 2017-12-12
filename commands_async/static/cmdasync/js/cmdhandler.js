@@ -29,12 +29,12 @@ cmdasyncform = {
             var $output = self.$output;
             self.exc_event_callbacks('updating', self.$form);
             if (task.ready) {
-                $output.append("TaskID(" + task.id + ")\n");
                 if (!task.failed) {
-                    $output.append(task.output)
+                    $output.prepend(task.output)
                 } else {
-                    $output.append(task.traceback)
+                    $output.prepend(task.traceback)
                 }
+                $output.prepend("TaskID(" + task.id + ")\n");
                 self.running = false;
                 self.exc_event_callbacks('update-finish', self.$form);
             } else if (self.update) {
