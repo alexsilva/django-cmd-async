@@ -67,7 +67,8 @@ cmdasyncform = {
             }
         });
         req.fail(function () {
-
+            self.running = false;
+            self.exc_event_callbacks('update-finish', self.$form);
         });
     },
     revoke_task : function () {
