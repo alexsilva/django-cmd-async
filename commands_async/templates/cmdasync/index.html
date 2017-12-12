@@ -85,8 +85,8 @@
                     $btnRevoke.click(cmdasyncform.revoke_task.bind(cmdasyncform));
                 },
                 error: function(xhr) {
+                    requestErrorClean();
                     if (xhr.status === 400) {
-                        requestErrorClean();
                         var data = xhr.responseJSON;
                         var $input, $inputParent;
                         var $panel = $("#task-panel");
