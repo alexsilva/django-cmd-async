@@ -1,5 +1,7 @@
+# coding=utf-8
 import collections
 from celery.task.control import revoke
+from django.core.exceptions import PermissionDenied
 
 from django.http import JsonResponse
 from django.views.generic import FormView, View
@@ -19,6 +21,14 @@ class TaskFormView(FormView):
     form_class = TaskForm
     success_url = '.'
 
+    commands_skip = settings.COMMANDS_ASYNC_COMMANDS_IGNORE
+
+    def is_command_valid(self, command_name, app_name=None):
+        items = [command_name]
+        if app_name is not None:
+            items.append(app_name + "." + command_name)
+        return all(map(lambda x: x not in self.commands_skip, items))
+
     def get_context_data(self, **kwargs):
         context = super(TaskFormView, self).get_context_data(**kwargs)
 
@@ -26,9 +36,11 @@ class TaskFormView(FormView):
         commands_all = get_commands()
 
         # merge
-        for name in commands_all:
-            items = commands.setdefault(commands_all[name], [])
-            items.append(name)
+        for command_name in commands_all:
+            app_name = commands_all[command_name]
+            items = commands.setdefault(app_name, [])
+            if self.is_command_valid(command_name, app_name=app_name):
+                items.append(command_name)
 
         # order
         for key in commands:
@@ -50,10 +62,15 @@ class TaskFormView(FormView):
         app_command = form.cleaned_data['app_command']
         command_args = form.cleaned_data['args']
         command_kwargs = form.cleaned_data['kwargs']
+        if not self.is_command_valid(app_command, app_name=form.app_name):
+            raise PermissionDenied  # Can not execute this command.
         task = command_exec.delay(app_command, *command_args, **command_kwargs)
         return JsonResponse({
             'task': {
-                'id': task.id
+                'id': task.id,
+                'command': {
+                    'name': app_command
+                }
             }
         })
 
