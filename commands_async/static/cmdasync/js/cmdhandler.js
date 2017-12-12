@@ -3,6 +3,18 @@ cmdasyncform = {
         // these HTTP methods do not require CSRF protection
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     },
+    getCookie: function(name) {
+      var start = document.cookie.indexOf(name + "=");
+      var len = start + name.length + 1;
+      if ((!start) && (name !== document.cookie.substring(0, name.length))) {
+        return null;
+      }
+      if (start === -1) return null;
+      var end = document.cookie.indexOf(';', len);
+      if (end === -1) end = document.cookie.length;
+      return document.cookie.substring(len, end);
+    },
+
     init: function (outputelem) {
         this.$output = $(outputelem);
         this.update = true;
@@ -58,7 +70,7 @@ cmdasyncform = {
     },
     revoke_task : function () {
         var self = this;
-        var csrftoken = $("input[name=csrfmiddlewaretoken]").val();
+        var csrftoken = this.getCookie("csrftoken");
         $.ajax({
             type: "POST",
             dataType: 'json',
