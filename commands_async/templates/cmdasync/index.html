@@ -21,6 +21,7 @@
             $("#task-args").change(function(){ $("#id_args").val($(this).val());});
             $("#task-kwargs").change(function(){ $("#id_kwargs").val($(this).val());});
 
+            {% if settings.COMMANDS_ASYNC_LIST %}
             $(".dropdown-menu > li > a").on('click', function () {
                 var value = $(this).attr("href");
                 value = value.substring(1, value.length);
@@ -37,6 +38,11 @@
                 cmdasyncform.update_abort();
                 cmdasyncform.clear_output();
             });
+            {% else %}
+            $("#task-submit").click(function(){
+                $("#id_app_command").val($("#task-app-command").val());
+            });
+            {% endif %}
 
             var requestErrorClean = function() {
                 var $panel = $("#task-panel");
@@ -129,11 +135,15 @@
             <form class="navbar-form navbar-left" id="taskform" action="." method="post">{% csrf_token %}
                 <div class="form-group">
                     <div class="input-group">
-{#                        <span class="input-group-addon">#}
-{#                        <input type="checkbox" aria-label="realtime">#}
-{#                        </span>#}
-                        <span class="input-group-addon" id="form-app_name">CELERY</span>
-                        {% include "cmdasync/form-dropdown.html" %}
+                        {% if settings.COMMANDS_ASYNC_LIST %}
+                            <span class="input-group-addon" id="form-app_name">CELERY</span>
+                            {% include "cmdasync/form-dropdown.html" %}
+                        {% else %}
+                            <span class="input-group-addon" id="form-app_name">COMMAND</span>
+                            <input type="text" id="task-app-command" class="form-control"
+                                   autocomplete="on" placeholder=""
+                                   aria-describedby="basic-addon2">
+                        {% endif %}
                     </div>
                     <div class="btn-group" role="group">
                         {{ form.as_ul }}

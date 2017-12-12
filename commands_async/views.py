@@ -8,6 +8,7 @@ from .forms import TaskForm
 from django.core.management import get_commands
 from commands_async.tasks import command_exec
 from celery import current_app
+from . import settings
 
 
 class TaskFormView(FormView):
@@ -34,6 +35,7 @@ class TaskFormView(FormView):
             commands[key].sort()
 
         context['commands'] = commands
+        context['settings'] = settings
         return context
 
     def form_invalid(self, form):

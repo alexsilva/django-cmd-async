@@ -24,7 +24,10 @@ class TaskForm(forms.Form):
     def clean_app_command(self):
         app_command = self.cleaned_data['app_command']
         app_command = app_command.rstrip("#")
-        self.app_name, app_command = app_command.rsplit(".", 1)
+        try:
+            self.app_name, app_command = app_command.rsplit(".", 1)
+        except ValueError:
+            self.app_name = None
         return app_command
 
     def clean_args(self):
