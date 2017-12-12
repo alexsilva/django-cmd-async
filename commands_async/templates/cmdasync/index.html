@@ -9,7 +9,7 @@
     <script type="application/javascript" src="{% static "cmdasync/js/cmdhandler.js" %}"></script>
     <script type="application/javascript">
         $(document).ready(function () {
-            cmdayncform.init("#taskOutput");
+            cmdasyncform.init("#taskOutput");
 
             var rel_inputs = {
                 'args': 'task-args',
@@ -34,8 +34,8 @@
 
                 $("input#id_app_command").val(value);
                 // stop status update
-                cmdayncform.update_abort();
-                cmdayncform.clear_output();
+                cmdasyncform.update_abort();
+                cmdasyncform.clear_output();
             });
 
             var requestErrorClean = function() {
@@ -59,7 +59,7 @@
                 $btnRevoke.unbind("click");
             };
 
-            cmdayncform.ajax("form#taskform", {
+            cmdasyncform.ajax("form#taskform", {
                 beforeSubmit: function(arr, $form, options) {
                     var $button = $form.find('button[type=submit]');
                     if ($button.hasClass('disabled'))
@@ -69,13 +69,13 @@
                     var $btnCancel = $("#btn-form-cancel");
                     $btnCancel.removeClass('disabled');
                     $btnCancel.click(function() {
-                        cmdayncform.update_abort();
+                        cmdasyncform.update_abort();
                         $(this).addClass('disabled');
                     });
 
                     var $btnRevoke = $("#btn-form-revoke");
                     $btnRevoke.removeClass('disabled');
-                    $btnRevoke.click(cmdayncform.revoke_task.bind(cmdayncform));
+                    $btnRevoke.click(cmdasyncform.revoke_task.bind(cmdasyncform));
                 },
                 error: function(xhr) {
                     requestErrorClean();
@@ -97,11 +97,13 @@
                 }
             });
 
-            cmdayncform.add_ajax_success(function(responseText, statusText, xhr, $form) {
+            cmdasyncform.add_event_callback("form-valid",
+                function(responseText, statusText, xhr, $form) {
                 requestErrorClean();
             });
 
-            cmdayncform.add_ajax_update_finish(function(form) {
+            cmdasyncform.add_event_callback("update-finish",
+                function(form) {
                 requestUpdateFinish();
             })
         });
