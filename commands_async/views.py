@@ -2,7 +2,7 @@
 import collections
 from celery.task.control import revoke
 from django.core.exceptions import PermissionDenied
-
+from django.utils.translation import ugettext as _
 from django.http import JsonResponse
 from django.views.generic import FormView, View
 from celery.result import AsyncResult
@@ -28,10 +28,14 @@ class TaskFormView(FormView):
         items = [command_name]
         if app_name is not None:
             items.append(app_name + "." + command_name)
-        return all(map(lambda x: x not in self.commands_skip, items))
+
+        def check_command_name(name):
+            return str(name) not in self.commands_skip
+
+        return all(map(check_command_name , items))
 
     def has_permission(self):
-        if self.command_permission_name is not None:
+        if bool(self.command_permission_name):
             has_perm = self.request.user.has_perm(self.command_permission_name)
         else:
             has_perm = True
@@ -71,7 +75,12 @@ class TaskFormView(FormView):
         command_args = form.cleaned_data['args']
         command_kwargs = form.cleaned_data['kwargs']
         if not self.is_command_valid(app_command, app_name=form.app_name) or not self.has_permission():
-            raise PermissionDenied  # Can not execute this command.
+            if not self.request.is_ajax():
+                raise PermissionDenied  # Can not execute this command.
+            else:
+                return JsonResponse({
+                    'form': {'errors': {'app_command': [_("not allowed to run this command")]}}
+                }, status=400)
         task = command_exec.delay(app_command, *command_args, **command_kwargs)
         return JsonResponse({
             'task': {
