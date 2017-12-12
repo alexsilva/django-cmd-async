@@ -27,6 +27,7 @@ cmdasyncform = {
         req.success(function (data) {
             var task = data.task;
             var $output = self.$output;
+            self.exc_event_callbacks('updating', self.$form);
             if (task.ready) {
                 $output.append("TaskID(" + task.id + ")\n");
                 if (!task.failed) {

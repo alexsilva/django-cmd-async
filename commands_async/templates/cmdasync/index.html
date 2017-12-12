@@ -49,6 +49,7 @@
             };
 
             var requestUpdateFinish = function() {
+                $("#task-progress").hide();
                 var $btnSubmit = $('#task-submit');
                 $btnSubmit.removeClass('disabled');
                 var $btnCancel = $("#btn-form-cancel");
@@ -96,9 +97,19 @@
                     requestUpdateFinish();
                 }
             });
-
+            cmdasyncform.add_event_callback("updating", function($form) {
+                var count = $form.data("count") + 10;
+                var $progress = $("#task-progress");
+                $progress.find("div.progress-bar")
+                    .css("width", count)
+                    .attr('aria-valuenow', count);
+                $progress.show();
+                if (count > 100) count = 100;
+                $form.data("count", count);
+            });
             cmdasyncform.add_event_callback("form-valid",
                 function(responseText, statusText, xhr, $form) {
+                $form.data("count", 0);
                 requestErrorClean();
             });
 
@@ -147,7 +158,8 @@
         </div>
         <div class="panel-footer">
             <div class="progress" id="task-progress" style="display: none">
-              <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+              <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 <span class="sr-only">40% Complete (success)</span>
               </div>
             </div>
