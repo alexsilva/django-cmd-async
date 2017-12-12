@@ -10,17 +10,16 @@
     <script type="application/javascript">
         $(document).ready(function () {
             cmdasyncform.init("#taskOutput");
-
             var rel_inputs = {
                 'args': 'task-args',
                 'kwargs': 'task-kwargs',
                 'app_command': 'task-app-command'
             };
-
             // passing parameters.
             $("#task-args").change(function(){ $("#id_args").val($(this).val());});
             $("#task-kwargs").change(function(){ $("#id_kwargs").val($(this).val());});
-
+            var $btnSubmit = $("#task-submit");
+            $btnSubmit.click(function() { cmdasyncform.clear_output(); });
             {% if settings.COMMANDS_ASYNC_LIST %}
             $(".dropdown-menu > li > a").on('click', function () {
                 var value = $(this).attr("href");
@@ -39,9 +38,8 @@
                 cmdasyncform.clear_output();
             });
             {% else %}
-            $("#task-submit").click(function(){
+            $btnSubmit.click(function(){
                 $("#id_app_command").val($("#task-app-command").val());
-                cmdasyncform.clear_output();
             });
             {% endif %}
 
@@ -184,9 +182,7 @@
                 <span class="sr-only"></span>
               </div>
             </div>
-            <div class="well-lg">
-                <pre id="taskOutput"></pre>
-            </div>
+            <pre id="taskOutput"></pre>
         </div>
     </div>
 </div>
