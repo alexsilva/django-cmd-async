@@ -14,6 +14,7 @@ cmdasyncform = {
         };
         this.$form = null;
         this.taskid = null;
+        this.requestTimeout = null;
     },
     request: function(task_id) {
         if (!this.running)
@@ -28,21 +29,23 @@ cmdasyncform = {
             var task = data.task;
             var $output = self.$output;
             self.exc_event_callbacks('updating', self.$form);
-            if (task.ready) {
-                if (!task.failed) {
-                    $output.prepend(task.output)
+            if (self.update) {
+                if (task.ready) {
+                    if (!task.failed) {
+                        $output.prepend(task.output)
+                    } else {
+                        $output.prepend(task.traceback)
+                    }
+                    $output.prepend("TaskID(" + task.id + ")\n");
+                    self.running = false;
+                    self.exc_event_callbacks('update-finish', self.$form);
                 } else {
-                    $output.prepend(task.traceback)
+                    // new update check
+                    this.requestTimeout = setTimeout(function () {
+                        self.running = true;
+                        self.request(task_id)
+                    }, 1000);
                 }
-                $output.prepend("TaskID(" + task.id + ")\n");
-                self.running = false;
-                self.exc_event_callbacks('update-finish', self.$form);
-            } else if (self.update) {
-                // new update check
-                setTimeout(function () {
-                    self.running = true;
-                    self.request(task_id)
-                }, 1000);
             } else {
                 self.running = false;
                 self.exc_event_callbacks('update-finish', self.$form);
@@ -74,6 +77,8 @@ cmdasyncform = {
     },
 
     update_abort: function () {
+        if (this.requestTimeout !== null)
+            clearTimeout(this.requestTimeout);
         this.update = !this.running;
     },
 
