@@ -7,8 +7,11 @@ cmdayncform = {
         this.$output = $(outputelem);
         this.update = true;
         this.running = false;
-        this.successAjaxArr = [];
-        this.onUpdateFinishArr = [];
+        this.events = {
+            'form-valid': [],
+            'update-finish': [],
+            'updating': []
+        };
         this.$form = null;
         this.taskid = null;
     },
@@ -32,7 +35,7 @@ cmdayncform = {
                     $output.append(task.traceback)
                 }
                 self.running = false;
-                self.exc_fnarr(self.onUpdateFinishArr, self.$form);
+                self.exc_event_callbacks('update-finish', self.$form);
             } else if (self.update) {
                 // new update check
                 setTimeout(function () {
@@ -41,7 +44,7 @@ cmdayncform = {
                 }, 1000);
             } else {
                 self.running = false;
-                self.exc_fnarr(self.onUpdateFinishArr, self.$form);
+                self.exc_event_callbacks('update-finish', self.$form);
             }
         });
         req.fail(function () {
@@ -73,24 +76,21 @@ cmdayncform = {
         this.update = !this.running;
     },
 
-    add_ajax_success : function(fn) {
-        this.successAjaxArr.push(fn);
+    add_event_callback: function(name, fn) {
+        this.events[name].push(fn);
     },
 
-    add_ajax_update_finish : function(fn) {
-        this.onUpdateFinishArr.push(fn);
-    },
-
-    on_ajax_success : function (data) {
+    on_form_valid : function (data) {
         var task = data.task;
         this.taskid = task.id;
         this.request(task.id);
     },
 
-    exc_fnarr: function(fnarr) {
-        var length = fnarr.length;
+    exc_event_callbacks: function(name) {
+        var event_callbacks = this.events[name];
+        var length = event_callbacks.length;
             for (var i=0; i < length; i++) {
-                fnarr[i].apply(this, Array.prototype.slice.call(arguments, 1));
+                event_callbacks[i].apply(this, Array.prototype.slice.call(arguments, 1));
             }
     },
     ajax: function (elem, options) {
@@ -98,11 +98,11 @@ cmdayncform = {
         options = options || {};
         options.dataType = 'json';
 
-        if (this.successAjaxArr.indexOf(this.on_ajax_success) === -1)
-            this.add_ajax_success(this.on_ajax_success.bind(this));
+        if (this.events['form-valid'].indexOf(this.on_form_valid) === -1)
+            this.add_event_callback("form-valid", this.on_form_valid.bind(this));
 
         options.success = function(responseText, statusText, xhr, $form) {
-            self.exc_fnarr(self.successAjaxArr, responseText, statusText, xhr, $form);
+            self.exc_event_callbacks('form-valid', responseText, statusText, xhr, $form);
         };
         this.$form = $(elem).ajaxForm(options);
         return options;
