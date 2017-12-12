@@ -85,7 +85,7 @@
                     $btnRevoke.click(cmdasyncform.revoke_task.bind(cmdasyncform));
                 },
                 error: function(xhr) {
-                    if (xhr.status !== 400) {
+                    if (xhr.status === 400) {
                         requestErrorClean();
                         var data = xhr.responseJSON;
                         var $input, $inputParent;
