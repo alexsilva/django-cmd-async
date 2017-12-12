@@ -104,7 +104,7 @@
                     .css("width", count)
                     .attr('aria-valuenow', count);
                 $progress.show();
-                if (count > 100) count = 100;
+                if (count > 100) count = 0;
                 $form.data("count", count);
             });
             cmdasyncform.add_event_callback("form-valid",
