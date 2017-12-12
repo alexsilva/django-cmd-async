@@ -104,10 +104,10 @@
                 }
             });
             cmdasyncform.add_event_callback("updating", function($form) {
-                var count = $form.data("count") + 10;
+                var count = $form.data("count") + 1;
                 var $progress = $("#task-progress");
                 $progress.find("div.progress-bar")
-                    .css("width", count)
+                    .css("width", count + "%")
                     .attr('aria-valuenow', count);
                 $progress.show();
                 if (count > 100) count = 0;
