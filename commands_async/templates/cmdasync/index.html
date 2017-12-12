@@ -41,6 +41,7 @@
             {% else %}
             $("#task-submit").click(function(){
                 $("#id_app_command").val($("#task-app-command").val());
+                cmdasyncform.clear_output();
             });
             {% endif %}
 
