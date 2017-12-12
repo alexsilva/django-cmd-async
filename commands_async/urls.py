@@ -11,8 +11,7 @@ cmd_patterns = ([
     url(r'^$', login_required(never_cache(views.TaskFormView.as_view()),
                               login_url=settings.COMMANDS_ASYNC_LOGIN_URL),
         name='index'),
-    url(r'^status/(?P<task_id>.*)', login_required(never_cache(views.TaskFormStatus.as_view()),
-                                                   login_url=settings.COMMANDS_ASYNC_LOGIN_URL),
+    url(r'^status/(?P<task_id>.*)', never_cache(views.TaskFormStatus.as_view()),
         name='status')
 ], 'command-async')
 
