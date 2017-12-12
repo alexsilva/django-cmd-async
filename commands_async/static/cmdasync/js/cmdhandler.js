@@ -37,6 +37,7 @@ cmdasyncform = {
                         $output.prepend(task.traceback)
                     }
                     $output.prepend("TaskID(" + task.id + ")\n");
+                    $output.prepend("-----------------------\n");
                     self.running = false;
                     self.exc_event_callbacks('update-finish', self.$form);
                 } else {
