@@ -25,16 +25,16 @@ cmdasyncform = {
             'updating': []
         };
         this.$form = null;
-        this.taskid = null;
+        this.task = null;
         this.requestTimeout = null;
     },
-    request: function(task_id) {
+    request: function(task) {
         if (!this.running)
             this.update = true;
         var self = this;
         var req = $.ajax({
             type: "get",
-            url: "status/" + task_id,
+            url: "status/" + task.id,
             cache: false
         });
         req.success(function (data) {
@@ -48,7 +48,9 @@ cmdasyncform = {
                     } else {
                         $output.prepend(task.traceback)
                     }
-                    $output.prepend("TaskID(" + task.id + ")\n");
+                    $output.prepend("params " + self.$form.serialize()  + "\n");
+                    $output.prepend("command " + self.task.command.name  + "\n");
+                    $output.prepend("task-id(" + task.id + ")\n");
                     $output.prepend("-----------------------\n");
                     self.running = false;
                     self.exc_event_callbacks('update-finish', self.$form);
@@ -56,7 +58,7 @@ cmdasyncform = {
                     // new update check
                     this.requestTimeout = setTimeout(function () {
                         self.running = true;
-                        self.request(task_id)
+                        self.request(task)
                     }, 1000);
                 }
             } else {
@@ -74,7 +76,7 @@ cmdasyncform = {
         $.ajax({
             type: "POST",
             dataType: 'json',
-            url: "status/" + this.taskid,
+            url: "status/" + self.task.id,
             beforeSend: function(xhr, settings) {
                 if (!self.csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -100,9 +102,8 @@ cmdasyncform = {
     },
 
     on_form_valid : function (data) {
-        var task = data.task;
-        this.taskid = task.id;
-        this.request(task.id);
+        this.task = data.task;
+        this.request(this.task);
     },
 
     exc_event_callbacks: function(name) {
