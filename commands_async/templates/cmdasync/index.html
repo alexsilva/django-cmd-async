@@ -87,21 +87,29 @@
                 },
                 error: function(xhr) {
                     requestErrorClean();
-                    if (xhr.status === 400) {
-                        var data = xhr.responseJSON;
-                        var $input, $inputParent;
-                        var $panel = $("#task-panel");
-                        $panel.addClass("panel-danger");
-                        var $header = $panel.find('.panel-heading').hide();
-                        var $errorGroup = $("<ul id='task-error-header'></ul>");
-                        for (var name in data.form.errors) {
-                            $input = $("#" + rel_inputs[name]);
-                            $inputParent = $input.parent();
-                            $inputParent.addClass("has-error has-feedback");
-                            $errorGroup.append("<li class='.error help-block'>" + data.form.errors[name][0] + "</li>");
-                        }
-                        $header.append($errorGroup);
-                        $header.show();
+                    switch (xhr.status) {
+                        case 200:  // need login
+                            var url = ["{{ settings.COMMANDS_ASYNC_LOGIN_URL }}"];
+                            url.push("?{{ settings.COMMANDS_ASYNC_REDIRECT_FIELD_NAME }}=");
+                            url.push("{% url 'command-async:index' %}");
+                            window.location = url.join("");
+                            break;
+                        case 400:
+                            var data = xhr.responseJSON;
+                            var $input, $inputParent;
+                            var $panel = $("#task-panel");
+                            $panel.addClass("panel-danger");
+                            var $header = $panel.find('.panel-heading').hide();
+                            var $errorGroup = $("<ul id='task-error-header'></ul>");
+                            for (var name in data.form.errors) {
+                                $input = $("#" + rel_inputs[name]);
+                                $inputParent = $input.parent();
+                                $inputParent.addClass("has-error has-feedback");
+                                $errorGroup.append("<li class='.error help-block'>" + data.form.errors[name][0] + "</li>");
+                            }
+                            $header.append($errorGroup);
+                            $header.show();
+                            break;
                     }
                     requestUpdateFinish();
                 }
