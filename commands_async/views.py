@@ -22,12 +22,20 @@ class TaskFormView(FormView):
     success_url = '.'
 
     commands_skip = settings.COMMANDS_ASYNC_COMMANDS_IGNORE
+    command_permission_name = settings.COMMANDS_ASYNC_PERMISSION_NAME
 
     def is_command_valid(self, command_name, app_name=None):
         items = [command_name]
         if app_name is not None:
             items.append(app_name + "." + command_name)
         return all(map(lambda x: x not in self.commands_skip, items))
+
+    def has_permission(self):
+        if self.command_permission_name is not None:
+            has_perm = self.request.user.has_perm(self.command_permission_name)
+        else:
+            has_perm = True
+        return has_perm
 
     def get_context_data(self, **kwargs):
         context = super(TaskFormView, self).get_context_data(**kwargs)
@@ -62,7 +70,7 @@ class TaskFormView(FormView):
         app_command = form.cleaned_data['app_command']
         command_args = form.cleaned_data['args']
         command_kwargs = form.cleaned_data['kwargs']
-        if not self.is_command_valid(app_command, app_name=form.app_name):
+        if not self.is_command_valid(app_command, app_name=form.app_name) or not self.has_permission():
             raise PermissionDenied  # Can not execute this command.
         task = command_exec.delay(app_command, *command_args, **command_kwargs)
         return JsonResponse({
