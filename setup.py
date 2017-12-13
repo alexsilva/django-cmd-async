@@ -8,5 +8,9 @@ setup(
     license='MIT',
     author='alex',
     author_email='alex@fabricadigital.com.br',
-    description='Web execution of commands asynchronously.'
+    description='Web execution of commands asynchronously.',
+    classifiers=[
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2'
+    ]
 )
