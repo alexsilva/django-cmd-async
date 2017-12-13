@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 15:17-0200\n"
+"POT-Creation-Date: 2017-12-13 15:24-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgstr "Escolha uma opção"
 
 #: .\commands_async\templates\cmdasync\index.html:5
 msgid "Run tasks"
-msgstr "Excute tarefas"
+msgstr "Execute tarefas"
 
 #: .\commands_async\templates\cmdasync\index.html:149
 #: .\commands_async\templates\cmdasync\index.html:152
