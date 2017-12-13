@@ -9,6 +9,7 @@ setup(
     author='alex',
     author_email='alex@fabricadigital.com.br',
     description='Web execution of commands asynchronously.',
+    include_package_data=True,
     classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 2'
