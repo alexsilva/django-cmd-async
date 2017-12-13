@@ -1,5 +1,6 @@
 # django-cmd-async
-Web execution of commands asynchronously.
+Django app that makes it possible to execute commands through your web browser. It uses bootstrap v3 to give the interface a better look.
+Commands are run through the [Celery](http://docs.celeryproject.org) - Distributed Task Queue, which allows us to manage execution and return and data with ease.
 
 ## DJANGO settings
 
