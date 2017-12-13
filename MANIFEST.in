@@ -1,0 +1,5 @@
+include README.rst
+include LICENSE
+recursive-include commands_async/locale *
+recursive-include commands_async/static *
+recursive-include commands_async/templates *
