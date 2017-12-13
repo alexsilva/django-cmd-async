@@ -37,7 +37,7 @@ cmdasyncform = {
             url: "status/" + task.id,
             cache: false
         });
-        req.success(function (data) {
+        req.done(function (data) {
             var task = data.task;
             var $output = self.$output;
             self.exc_event_callbacks('updating', self.$form);
