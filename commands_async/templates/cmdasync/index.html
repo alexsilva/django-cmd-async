@@ -1,7 +1,8 @@
 {% extends "cmdasync/base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
-{% block title %}Run tasks{% endblock %}
+{% block title %}{% trans "Run tasks" %}{% endblock %}
 
 {% block extrahead %}
        <!-- Latest compiled and minified CSS -->
@@ -145,10 +146,10 @@
                 <div class="form-group">
                     <div class="input-group">
                         {% if settings.COMMANDS_ASYNC_LIST %}
-                            <span class="input-group-addon" id="form-app_name">CELERY</span>
+                            <span class="input-group-addon" id="form-app_name">{% trans "COMMAND" %}</span>
                             {% include "cmdasync/form-dropdown.html" %}
                         {% else %}
-                            <span class="input-group-addon" id="form-app_name">COMMAND</span>
+                            <span class="input-group-addon" id="form-app_name">{% trans "COMMAND" %}</span>
                             <input type="text" id="task-app-command" class="form-control"
                                    autocomplete="on" placeholder=""
                                    aria-describedby="basic-addon2">
@@ -162,13 +163,15 @@
                     </div>
                     <div class="btn-group" role="group">
                         <div class="input-group ">
-                            <span class="input-group-addon" id="basic-addon2">args</span>
-                            <input type="text" id="task-args" class="form-control" autocomplete="off" placeholder="Insert arguments"
+                            <span class="input-group-addon" id="basic-addon2">{% trans "args" %}</span>
+                            <input type="text" id="task-args" class="form-control" autocomplete="off"
+                                   placeholder="{% trans "Insert arguments" %}"
                                    aria-describedby="basic-addon2">
                         </div>
                         <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon2">kwargs</span>
-                            <input type="text" id="task-kwargs" class="form-control" autocomplete="off" placeholder="Insert arguments"
+                            <span class="input-group-addon" id="basic-addon2">{% trans "kwargs" %}</span>
+                            <input type="text" id="task-kwargs" class="form-control" autocomplete="off"
+                                   placeholder="{% trans "Insert arguments" %}"
                                    aria-describedby="basic-addon2">
                         </div>
                     </div>

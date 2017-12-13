@@ -1,3 +1,4 @@
+{% load i18n %}
 <div class="dropdown">
     <button class="btn btn-default btn-md dropdown-toggle"
             type="button"
@@ -5,7 +6,7 @@
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="true">
-        <span class="info">Choose one</span>
+        <span class="info">{% trans "Choose one" %}</span>
         <span class="glyphicon glyphicon-menu-down"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="task-app-command">
