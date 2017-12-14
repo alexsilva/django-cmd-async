@@ -30,3 +30,9 @@ urlpatterns.append(url(r"^app/", include('commands_async.urls')))
 
 ## Test (python manage.py runserver 8080)
 In browser: http://localhost:8080/app/commands/async
+
+
+## Visual Result
+
+![Input view](https://github.com/alexsilva/django-cmd-async/raw/master/look/command.output.input.method.PNG)
+![List view](https://github.com/alexsilva/django-cmd-async/raw/master/look/command.output.list.method.PNG)
