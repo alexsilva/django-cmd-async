@@ -26,7 +26,7 @@ Commands are run through the [Celery](http://docs.celeryproject.org) - Distribut
 INSTALLED_APPS.append("commands_async")
 
 #### Include app urls
-urlpatterns.append(url(r"^/app/", include('commands_async.urls')))
+urlpatterns.append(url(r"^app/", include('commands_async.urls')))
 
 ## Test (python manage.py runserver 8080)
 In browser: http://localhost:8080/app/commands/async
