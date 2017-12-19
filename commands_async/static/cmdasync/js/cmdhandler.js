@@ -14,7 +14,31 @@ cmdasyncform = {
       if (end === -1) end = document.cookie.length;
       return document.cookie.substring(len, end);
     },
-
+    selectText: function(element) {
+        element = element.replace(/^#+/, "");
+        var doc = document;
+        var text = doc.getElementById(element);
+        var range, selection;
+        if (doc.body.createTextRange) {
+            range = doc.body.createTextRange();
+            range.moveToElementText(text);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(text);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    },
+    copyToClipboard: function(element) {
+        var $inputCopy = $("<input>");
+        $("body").append($inputCopy);
+        $inputCopy.val($(element).text()).select();
+        document.execCommand("copy");
+        $inputCopy.remove();
+        this.selectText(element);
+    },
     init: function (outputelem) {
         this.$output = $(outputelem);
         this.update = true;

@@ -16,6 +16,9 @@
                 'kwargs': 'task-kwargs',
                 'app_command': 'task-app-command'
             };
+            $("#taskCopy").click(function(){
+               cmdasyncform.copyToClipboard("#taskOutput");
+            });
             // passing parameters.
             $("#task-args").change(function(){ $("#id_args").val($(this).val());});
             $("#task-kwargs").change(function(){ $("#id_kwargs").val($(this).val());});
@@ -192,7 +195,8 @@
             </div>
             <pre id="taskOutput">{% trans "Execute a command" %}</pre>
             <div class="input-group">
-            <input type="button" class="btn btn-primary btn-xs disabled" value="{% trans "Copy" %}">
+                <input type="button" id="taskCopy" class="btn btn-primary btn-xs" value="{% trans "Copy" %}">
+            </div>
         </div>
     </div>
 </div>
