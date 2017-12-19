@@ -45,9 +45,9 @@
             {% endif %}
 
             var requestErrorClean = function() {
-                var $panel = $("#task-panel");
-                $panel.removeClass('panel-danger');
-                $panel.find('.panel-heading').hide();
+                var $error = $(".error-msg-container");
+                $error.removeClass("bg-danger");
+                $error.hide();
                 $("#task-error-header").remove();
                 for (var name in rel_inputs) {
                     $("#" + rel_inputs[name]).parent().removeClass("has-error");
@@ -96,9 +96,8 @@
                         case 400:
                             var data = xhr.responseJSON;
                             var $input, $inputParent;
-                            var $panel = $("#task-panel");
-                            $panel.addClass("panel-danger");
-                            var $header = $panel.find('.panel-heading').hide();
+                            var $error = $(".error-msg-container");
+                            $error.addClass("bg-danger");
                             var $errorGroup = $("<ul id='task-error-header'></ul>");
                             for (var name in data.form.errors) {
                                 $input = $("#" + rel_inputs[name]);
@@ -106,8 +105,8 @@
                                 $inputParent.addClass("has-error has-feedback");
                                 $errorGroup.append("<li class='.error help-block'>" + data.form.errors[name][0] + "</li>");
                             }
-                            $header.append($errorGroup);
-                            $header.show();
+                            $error.append($errorGroup);
+                            $error.show();
                             break;
                     }
                     requestUpdateFinish();
@@ -115,6 +114,7 @@
             });
             cmdasyncform.add_event_callback("updating", function($form) {
                 var count = $form.data("count") + 1;
+                $("#taskOutput").text("{% trans "Running command..." %}");
                 var $progress = $("#task-progress");
                 $progress.find("div.progress-bar")
                     .css("width", count + "%")
@@ -138,11 +138,18 @@
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid">
+<div class="container" id="wrap">
     <div class="panel panel-default" id="task-panel">
-        <div class="panel-heading" style="display: none"></div>
         <div class="panel-body">
-            <form class="navbar-form navbar-left" id="taskform" action="." method="post">{% csrf_token %}
+            {% block panelbody %}
+            <h3>{% trans "Checking and updating environment" %}</h3>
+            <p>
+                <strong>{% trans "Atenção" %}</strong>It is strongly recommended that the system be used
+                with the aid of an approved technician.
+            </p>
+            {% endblock %}
+            <p class="error-msg-container"></p>
+            <form class="form-inline" id="taskform" action="." method="post">{% csrf_token %}
                 <div class="form-group">
                     <div class="input-group">
                         {% if settings.COMMANDS_ASYNC_LIST %}
@@ -154,15 +161,10 @@
                                    autocomplete="on" placeholder=""
                                    aria-describedby="basic-addon2">
                         {% endif %}
+                 
                     </div>
-                    <div class="btn-group" role="group">
-                        {{ form.as_ul }}
-                        <button type="submit" id="task-submit" class="btn btn-default btn-md">Execute</button>
-                        <input type="button" id="btn-form-cancel" class="btn btn-warning btn-md disabled" value="{% trans "Cancel" %}">
-                        <input type="button" id="btn-form-revoke" class="btn btn-danger btn-md disabled" value="{% trans "Revoke" %}">
-                    </div>
-                    <div class="btn-group" role="group">
-                        <div class="input-group ">
+                    
+                        <div class="input-group">
                             <span class="input-group-addon" id="basic-addon2">{% trans "args" %}</span>
                             <input type="text" id="task-args" class="form-control" autocomplete="off"
                                    placeholder="{% trans "Insert arguments" %}"
@@ -174,8 +176,11 @@
                                    placeholder="{% trans "Insert arguments" %}"
                                    aria-describedby="basic-addon2">
                         </div>
-                    </div>
                 </div>
+                {{ form.as_ul }}
+                <button type="submit" id="task-submit" class="btn btn-success">Execute</button>
+                <button type="button" id="btn-form-cancel" class="btn btn-warning disabled">{% trans "Cancel" %}</button>
+                <button type="button" id="btn-form-revoke" class="btn btn-danger disabled">{% trans "Revoke" %}</button>
             </form>
         </div>
         <div class="panel-footer">
@@ -185,7 +190,9 @@
                 <span class="sr-only"></span>
               </div>
             </div>
-            <pre id="taskOutput"></pre>
+            <pre id="taskOutput">{% trans "Execute a command" %}</pre>
+            <div class="input-group">
+            <input type="button" class="btn btn-primary btn-xs disabled" value="{% trans "Copy" %}">
         </div>
     </div>
 </div>
