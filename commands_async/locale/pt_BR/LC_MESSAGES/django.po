@@ -76,7 +76,7 @@ msgstr "Revogar"
 
 #: .\commands_async\templates\cmdasync\index.html:193
 msgid "Execute a command"
-msgstr ""
+msgstr "Execute um comando"
 
 #: .\commands_async\templates\cmdasync\index.html:195
 msgid "Copy"
