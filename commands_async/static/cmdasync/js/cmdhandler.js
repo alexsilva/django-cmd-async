@@ -32,12 +32,8 @@ cmdasyncform = {
         }
     },
     copyToClipboard: function(element) {
-        var $inputCopy = $("<input>");
-        $("body").append($inputCopy);
-        $inputCopy.val($(element).text()).select();
-        document.execCommand("copy");
-        $inputCopy.remove();
         this.selectText(element);
+        document.execCommand("copy");
     },
     init: function (outputelem) {
         this.$output = $(outputelem);
