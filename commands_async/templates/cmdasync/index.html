@@ -16,7 +16,19 @@
                 'kwargs': 'task-kwargs',
                 'app_command': 'task-app-command'
             };
-            $("#taskCopy").click(function(){
+            $(window).scroll(function (eventData) {
+                var $button = $("#taskCopy");
+                var $button2 = $("#taskCopy2");
+                var offset = $(this).scrollTop();
+                if (offset > 60) {
+                    $button.hide();
+                    $button2.show();
+                } else {
+                    $button.show();
+                    $button2.hide()
+                }
+            });
+            $(".taskCopy").click(function(){
                cmdasyncform.copyToClipboard("#taskOutput");
             });
             // passing parameters.
@@ -193,9 +205,12 @@
                 <span class="sr-only"></span>
               </div>
             </div>
+            <div class="input-group">
+                <input type="button" id="taskCopy" class="btn btn-primary btn-xs taskCopy" value="{% trans "Copy" %}">
+            </div>
             <pre id="taskOutput">{% trans "Execute a command" %}</pre>
             <div class="input-group">
-                <input type="button" id="taskCopy" class="btn btn-primary btn-xs" value="{% trans "Copy" %}">
+                <input type="button" id="taskCopy2" class="btn btn-primary btn-sm taskCopy" value="{% trans "Copy" %}">
             </div>
         </div>
     </div>
