@@ -8,7 +8,7 @@ from django.views.generic import FormView, View
 from celery.result import AsyncResult
 from .forms import TaskForm
 from django.core.management import get_commands
-from commands_async.tasks import command_exec
+from commands_async.tasks import command_exec, logger
 from celery import current_app
 from . import settings
 
@@ -81,7 +81,19 @@ class TaskFormView(FormView):
                 return JsonResponse({
                     'form': {'errors': {'app_command': [_("not allowed to run this command")]}}
                 }, status=400)
-        task = command_exec.delay(app_command, *command_args, **command_kwargs)
+        try:
+            task = command_exec.delay(app_command, *command_args, **command_kwargs)
+        except:
+            logger.exception('failed to execute {0!s}'.format(app_command))
+            task = None
+        if task is None:
+            return JsonResponse({
+                'form': {
+                    'errors': {'app_command': [
+                        _("command %(command)s failed to execute") % {'command': app_command}
+                    ]}
+                }
+            }, status=400)
         return JsonResponse({
             'task': {
                 'id': task.id,
