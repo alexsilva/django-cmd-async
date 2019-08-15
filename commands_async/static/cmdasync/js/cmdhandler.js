@@ -35,10 +35,11 @@ cmdasyncform = {
         this.selectText(element);
         document.execCommand("copy");
     },
-    init: function (outputelem) {
+    init: function (outputelem, debug) {
         this.$output = $(outputelem);
         this.update = true;
         this.running = false;
+        this.debug = debug || false;
         this.events = {
             'form-valid': [],
             'update-finish': [],
@@ -63,14 +64,17 @@ cmdasyncform = {
             self.exc_event_callbacks('updating', self.$form);
             if (self.update) {
                 if (task.ready) {
+                    $output.empty();
                     if (!task.failed) {
-                        $output.prepend(task.output)
+                        $output.append(task.output)
                     } else {
-                        $output.prepend(task.traceback)
+                        $output.append(task.traceback)
                     }
-                    $output.prepend("arguments(" + self.$form.serialize()  + ")\n");
-                    $output.prepend("command(" + self.task.command.name  + ")\n");
-                    $output.prepend("task-id(" + task.id + ")\n");
+                    if (self.debug) {
+                        $output.prepend("arguments(" + self.$form.serialize()  + ")\n");
+                        $output.prepend("command(" + self.task.command.name  + ")\n");
+                        $output.prepend("task-id(" + task.id + ")\n");
+                    }
                     self.running = false;
                     self.exc_event_callbacks('update-finish', self.$form);
                 } else {
