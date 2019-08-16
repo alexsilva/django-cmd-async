@@ -26,6 +26,7 @@
             var $btnSubmit = $("#btn-task-submit");
             $btnSubmit.click(function() {
                 $(this).find(".task-progress").removeClass("d-none");
+                $("#task-copy").addClass("d-none");
                 cmdasyncform.clear_output();
             });
             {% if settings.COMMANDS_ASYNC_LIST %}
@@ -80,6 +81,9 @@
 
                 var $btnRevoke = $("#btn-task-revoke").addClass('disabled');
                 $btnRevoke.find(".task-progress").addClass("d-none");
+
+                // show/hide copy button
+                $("#task-copy")[$("#task-output").text().length > 0 ? "removeClass" : "addClass"]("d-none");
             };
 
             cmdasyncform.ajax("form#taskform", {
@@ -205,7 +209,7 @@
         <div class="card-footer">
             <pre id="task-output" >{% trans "Execute a command" %}</pre>
             <div class="input-group">
-            <input type="button" id="task-copy" class="btn btn-primary btn-sm" value="{% trans "Copy" %}">
+            <input type="button" id="task-copy" class="btn btn-primary btn-sm d-none" value="{% trans "Copy" %}">
             </div>
         </div>
     </div>

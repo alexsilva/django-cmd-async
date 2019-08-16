@@ -23,19 +23,18 @@ pre {
     margin-top: 0px
 }
 
-#taskCopy { margin-bottom: 2px}
-#taskCopy2 {
-  display: none; /* Hidden by default */
-  position: fixed; /* Fixed/sticky position */
-  bottom: 10px; /* Place the button at the bottom of the page */
-  right: 50%; /* Place the button 30px from the right */
-  z-index: 99; /* Make sure it does not overlap */
-  cursor: pointer; /* Add a mouse pointer on hover */
-  border-radius: 10px; /* Rounded corners */
+#task-copy {
+    position: fixed; /* Fixed/sticky position */
+    bottom: 5px; /* Place the button at the bottom of the page */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99; /* Make sure it does not overlap */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    border-radius: 10px; /* Rounded corners */
 }
 
 #taskCopy2:hover {
-  background-color: #555; /* Add a dark-grey background on hover */
+    background-color: #555; /* Add a dark-grey background on hover */
 }
 
 .is-invalid input.form-control {
