@@ -23,6 +23,21 @@ pre {
     margin-top: 0px
 }
 
+@media screen and (max-width: 768px) {
+    .form-task-args-lg {
+        display: none;
+    }
+    .form-task-args-md {
+        display: block;
+    }
+}
+
+@media screen and (min-width: 769px) {
+     .form-task-args-md {
+        display: none;
+    }
+}
+
 #task-copy {
     position: fixed; /* Fixed/sticky position */
     bottom: 5px; /* Place the button at the bottom of the page */
