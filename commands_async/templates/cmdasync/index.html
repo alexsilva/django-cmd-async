@@ -22,7 +22,13 @@
             // passing parameters.
             $("#task-args").change(function(){ $("#id_args").val($(this).val());});
             $("#task-kwargs").change(function(){ $("#id_kwargs").val($(this).val());});
-
+            // show/hide copy button
+            $("#task-app-command").focusin(function () {
+                $("#task-copy").addClass("d-none");
+            }).focusout(function () {
+                if ($("#task-output").text().length > 0)
+                    $("#task-copy").removeClass("d-none");
+            });
             var $btnSubmit = $("#btn-task-submit");
             $btnSubmit.click(function() {
                 $(this).find(".task-progress").removeClass("d-none");
@@ -161,7 +167,7 @@
                         {% else %}
                             <label for="task-app-command"></label>
                             <input type="text" id="task-app-command" class="form-control" autocomplete="on"
-                                   placeholder="" aria-describedby="form-app_name">
+                                   placeholder="{% trans "Execute a command" %}" aria-describedby="form-app_name">
                         {% endif %}
                     </div>
                     {% include 'cmdasync/response-form-task-args-lg.html' %}
@@ -187,7 +193,7 @@
             </form>
         </div>
         <div class="card-footer">
-            <pre id="task-output" >{% trans "Execute a command" %}</pre>
+            <pre id="task-output"></pre>
             <div class="input-group">
             <input type="button" id="task-copy" class="btn btn-primary btn-sm d-none" value="{% trans "Copy" %}">
             </div>
