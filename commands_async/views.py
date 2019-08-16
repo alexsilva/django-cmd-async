@@ -104,6 +104,19 @@ class TaskFormView(FormView):
         })
 
 
+class CeleryWorkerStatus(View):
+    """Reports status of workers celery"""
+    def get(self, request, **kwargs):
+        data = {'status': True, 'workers': []}
+        try:
+            for worker in current_app.control.inspect().active():
+                data['workers'].append(worker)
+        except Exception as err:
+            data['status'] = False
+            data['message'] = str(err)
+        return JsonResponse(data)
+
+
 class TaskFormStatus(View):
 
     def get(self, request, **kwargs):

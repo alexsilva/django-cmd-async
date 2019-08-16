@@ -8,8 +8,10 @@
        <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="{% static "cmdasync/styles.css" %}">
     <script type="application/javascript" src="{% static "cmdasync/js/cmdhandler.js" %}"></script>
+    <script type="application/javascript" src="{% static 'cmdasync/js/celery.workers.status.js' %}"></script>
     <script type="application/javascript">
         $(document).ready(function () {
+            workers_check_status();
             cmdasyncform.init("#task-output");
             var rel_inputs = {
                 'args': 'task-args',
@@ -146,6 +148,8 @@
 {% endblock %}
 
 {% block body %}
+{% include 'cmdasync/toast.html' %}
+
 <div class="container" id="wrap">
     <div class="card" id="task-panel">
         <div class="card-body">

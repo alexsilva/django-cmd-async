@@ -12,7 +12,9 @@ cmd_patterns = ([
                               login_url=settings.COMMANDS_ASYNC_LOGIN_URL),
         name='index'),
     url(r'^status/(?P<task_id>.*)', never_cache(views.TaskFormStatus.as_view()),
-        name='status')
+        name='status'),
+    url(r'^workers/status/$', login_required(never_cache(views.CeleryWorkerStatus.as_view())),
+        name='workers'),
 ], 'command-async')
 
 urlpatterns = [
