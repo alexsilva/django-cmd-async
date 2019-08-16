@@ -46,10 +46,11 @@ pre {
     z-index: 99; /* Make sure it does not overlap */
     cursor: pointer; /* Add a mouse pointer on hover */
     border-radius: 10px; /* Rounded corners */
+    opacity: 0.7;
 }
 
-#taskCopy2:hover {
-    background-color: #555; /* Add a dark-grey background on hover */
+#task-copy:hover {
+    opacity: 1.0;
 }
 
 .is-invalid input.form-control {
