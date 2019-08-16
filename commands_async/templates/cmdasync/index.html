@@ -154,8 +154,8 @@
 
 {% block body %}
 <div class="container" id="wrap">
-    <div class="panel panel-default" id="task-panel">
-        <div class="panel-body">
+    <div class="card" id="task-panel">
+        <div class="card-body">
             {% block panelbody %}
             <h3>{% trans "Checking and updating environment" %}</h3>
             <p>
@@ -164,41 +164,54 @@
             </p>
             {% endblock %}
             <p class="error-msg-container"></p>
-            <form class="form-inline" id="taskform" action="." method="post">{% csrf_token %}
+            <form id="taskform" action="." method="post">{% csrf_token %}
                 <div class="form-group">
-                    <div class="input-group">
+                    <div class="input-group mb-1">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" id="form-app_name">{% trans "COMMAND" %}</div>
+                        </div>
                         {% if settings.COMMANDS_ASYNC_LIST %}
-                            <span class="input-group-addon" id="form-app_name">{% trans "COMMAND" %}</span>
                             {% include "cmdasync/form-dropdown.html" %}
                         {% else %}
-                            <span class="input-group-addon" id="form-app_name">{% trans "COMMAND" %}</span>
-                            <input type="text" id="task-app-command" class="form-control"
-                                   autocomplete="on" placeholder=""
-                                   aria-describedby="basic-addon2">
+                            <label for="task-app-command"></label>
+                            <input type="text" id="task-app-command" class="form-control" autocomplete="on"
+                                   placeholder="" aria-describedby="form-app_name">
                         {% endif %}
-                 
                     </div>
-                    
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon2">{% trans "args" %}</span>
-                            <input type="text" id="task-args" class="form-control" autocomplete="off"
-                                   placeholder="{% trans "Insert arguments" %}"
-                                   aria-describedby="basic-addon2">
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text" id="btnGroupAddon">{% trans "args" %}</div>
+                                </div>
+                                <label for="task-args"></label>
+                                <input type="text" id="task-args" class="form-control" autocomplete="off"
+                                       placeholder="{% trans "Insert arguments" %}" aria-describedby="btnGroupAddon">
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon2">{% trans "kwargs" %}</span>
-                            <input type="text" id="task-kwargs" class="form-control" autocomplete="off"
-                                   placeholder="{% trans "Insert arguments" %}"
-                                   aria-describedby="basic-addon2">
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text" id="btnGroupAddon1">{% trans "kwargs" %}</div>
+                                </div>
+                                <label for="task-kwargs"></label>
+                                <input type="text" id="task-kwargs" class="form-control" autocomplete="off"
+                                       placeholder="{% trans "Insert arguments" %}" aria-describedby="btnGroupAddon1">
+                            </div>
                         </div>
+                    </div>
                 </div>
-                {{ form.as_ul }}
-                <button type="submit" id="task-submit" class="btn btn-success">Execute</button>
-                <button type="button" id="btn-form-cancel" class="btn btn-warning disabled">{% trans "Cancel" %}</button>
-                <button type="button" id="btn-form-revoke" class="btn btn-danger disabled">{% trans "Revoke" %}</button>
+                <div class="form-group">
+                    {{ form.as_ul }}
+                    <button type="submit" id="task-submit" class="btn btn-success">Execute</button>
+                    <button type="button" id="btn-form-cancel"
+                            class="btn btn-warning disabled">{% trans "Cancel" %}</button>
+                    <button type="button" id="btn-form-revoke"
+                            class="btn btn-danger disabled">{% trans "Revoke" %}</button>
+                </div>
             </form>
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
             <div class="progress" id="task-progress" style="display: none">
               <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
@@ -206,9 +219,9 @@
               </div>
             </div>
             <div class="input-group">
-                <input type="button" id="taskCopy" class="btn btn-primary btn-xs taskCopy" value="{% trans "Copy" %}">
+                <input type="button" id="taskCopy" class="btn btn-primary btn-sm taskCopy" value="{% trans "Copy" %}">
             </div>
-            <pre id="taskOutput">{% trans "Execute a command" %}</pre>
+            <pre id="taskOutput" >{% trans "Execute a command" %}</pre>
             <div class="input-group">
                 <input type="button" id="taskCopy2" class="btn btn-primary btn-sm taskCopy" value="{% trans "Copy" %}">
             </div>
