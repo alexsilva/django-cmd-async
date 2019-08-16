@@ -60,12 +60,9 @@
             {% endif %}
 
             var requestErrorClean = function() {
-                var $error = $(".error-msg-container");
-                $error.removeClass("bg-danger");
-                $error.hide();
-                $("#task-error-header").remove();
+                $(".invalid-feedback").remove();
                 for (var name in rel_inputs) {
-                    $("#" + rel_inputs[name]).parent().removeClass("has-error");
+                    $("#" + rel_inputs[name]).removeClass("is-invalid");
                 }
             };
 
@@ -111,17 +108,14 @@
                         case 400:
                             var data = xhr.responseJSON;
                             var $input, $inputParent;
-                            var $error = $(".error-msg-container");
-                            $error.addClass("bg-danger");
-                            var $errorGroup = $("<ul id='task-error-header'></ul>");
+                            var $error = $("#alert-message");
+                            $error.addClass("alert-danger");
+                            var $feedback = $('<div class="invalid-feedback"></div>');
                             for (var name in data.form.errors) {
                                 $input = $("#" + rel_inputs[name]);
-                                $inputParent = $input.parent();
-                                $inputParent.addClass("has-error has-feedback");
-                                $errorGroup.append("<li class='.error help-block'>" + data.form.errors[name][0] + "</li>");
+                                $input.addClass("is-invalid");
+                                $input.parent().append($feedback.clone().html(data.form.errors[name][0]));
                             }
-                            $error.append($errorGroup);
-                            $error.show();
                             break;
                     }
                     requestUpdateFinish();
@@ -163,7 +157,6 @@
                 {% trans "It is strongly recommended that the systembe usedwith the aid of an approved technician." %}
             </p>
             {% endblock %}
-            <p class="error-msg-container"></p>
             <form id="taskform" action="." method="post">{% csrf_token %}
                 <div class="form-group">
                     <div class="input-group mb-1">
