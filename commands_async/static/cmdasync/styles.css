@@ -5,10 +5,6 @@
 
 }
 
-p {
-    margin: 10px 0px 10px 0px
-}
-
 button, input[type=button] {
     background-image: none;
     box-shadow: none;
@@ -19,29 +15,11 @@ pre {
     background-color: #fff
 }
 
-@media screen and (max-width: 1200px) {
-    button {
-        margin-top: 10px !important
-    }
-
-    #taskform span.input-group-addon {
-        width: 100px
-    }
-
-    #taskform .input-group {
-        display: inline-table;
-        width: 100%;
-        border-collapse: separate;
-        vertical-align: initial;
-        vertical-align: auto; /*ie fix*/
-    }
-}
-
 #wrap {
     padding: 40px 15px !important
 }
 
-.panel-body h3 {
+.card-body h3 {
     margin-top: 0px
 }
 
@@ -60,23 +38,7 @@ pre {
   background-color: #555; /* Add a dark-grey background on hover */
 }
 
-.error-msg-container {
-    padding: 10px;
-    display: none;
-    border-radius: 4px
-}
-
-.error-msg-container ul#task-error-header {
-    padding-left: 5px;
-    margin: 0px
-}
-
-.error-msg-container ul#task-error-header li {
-    margin: 0px;
-    color: #a94442
-}
-
-.has-feedback input.form-control {
+.is-invalid input.form-control {
     padding-right: initial;
     padding-right: auto /*ie fix*/
 }
