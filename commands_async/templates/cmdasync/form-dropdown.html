@@ -1,6 +1,6 @@
 {% load i18n %}
 <div class="dropdown">
-    <button class="btn btn-default btn-md dropdown-toggle"
+    <button class="btn btn-secondary dropdown-toggle btn-md"
             type="button"
             id="task-app-command"
             data-toggle="dropdown"
@@ -9,13 +9,13 @@
         <span class="info">{% trans "Choose one" %}</span>
         <span class="glyphicon glyphicon-menu-down"></span>
     </button>
-    <ul class="dropdown-menu" aria-labelledby="task-app-command">
+    <div class="dropdown-menu" aria-labelledby="task-app-command">
         {% for app_name, values in commands.items %}
-            <li class="dropdown-header">{{ app_name|upper }}</li>
+            <h6 class="dropdown-item">{{ app_name|upper }}</h6>
             {% for cmd in values %}
-                <li><a href="#{{ app_name }}.{{ cmd }}">{{ cmd|lower }}</a></li>
+                <a class="dropdown-item" href="#{{ app_name }}.{{ cmd }}">{{ cmd|lower }}</a>
             {% endfor %}
             <li role="separator" class="divider"></li>
         {% endfor %}
-    </ul>
+    </div>
 </div>

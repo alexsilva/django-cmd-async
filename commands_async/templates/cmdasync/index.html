@@ -37,7 +37,7 @@
             var $btnSubmit = $("#task-submit");
             $btnSubmit.click(function() { cmdasyncform.clear_output(); });
             {% if settings.COMMANDS_ASYNC_LIST %}
-            $(".dropdown-menu > li > a").on('click', function () {
+            $(".dropdown-menu > a").on('click', function () {
                 var value = $(this).attr("href");
                 value = value.substring(1, value.length);
 
