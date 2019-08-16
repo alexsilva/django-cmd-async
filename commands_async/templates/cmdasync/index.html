@@ -16,26 +16,18 @@
                 'kwargs': 'task-kwargs',
                 'app_command': 'task-app-command'
             };
-            $(window).scroll(function (eventData) {
-                var $button = $("#taskCopy");
-                var $button2 = $("#taskCopy2");
-                var offset = $(this).scrollTop();
-                if (offset > 60) {
-                    $button.hide();
-                    $button2.show();
-                } else {
-                    $button.show();
-                    $button2.hide()
-                }
-            });
             $(".taskCopy").click(function(){
                cmdasyncform.copyToClipboard("#taskOutput");
             });
             // passing parameters.
             $("#task-args").change(function(){ $("#id_args").val($(this).val());});
             $("#task-kwargs").change(function(){ $("#id_kwargs").val($(this).val());});
-            var $btnSubmit = $("#task-submit");
-            $btnSubmit.click(function() { cmdasyncform.clear_output(); });
+
+            var $btnSubmit = $("#btn-task-submit");
+            $btnSubmit.click(function() {
+                $(this).find(".task-progress").removeClass("d-none");
+                cmdasyncform.clear_output();
+            });
             {% if settings.COMMANDS_ASYNC_LIST %}
             $(".dropdown-menu > a").on('click', function () {
                 var value = $(this).attr("href");
@@ -59,6 +51,19 @@
             });
             {% endif %}
 
+            $("#btn-task-cancel").click(function () {
+                var $btnCancel = $(this);
+                cmdasyncform.update_abort();
+                $btnCancel.find(".task-progress").removeClass("d-none");
+                $btnCancel.addClass('disabled');
+            });
+
+            $("#btn-task-revoke").click(function () {
+                var $btnRevoke = $(this);
+                cmdasyncform.revoke_task.bind(cmdasyncform)();
+                $btnRevoke.find(".task-progress").removeClass("d-none");
+            });
+
             var requestErrorClean = function() {
                 $(".invalid-feedback").remove();
                 for (var name in rel_inputs) {
@@ -67,34 +72,31 @@
             };
 
             var requestUpdateFinish = function() {
-                $("#task-progress").hide();
-                var $btnSubmit = $('#task-submit');
-                $btnSubmit.removeClass('disabled');
-                var $btnCancel = $("#btn-form-cancel");
+                var $btnSubmit = $('#btn-task-submit')
+                    .removeClass('disabled');
+                $btnSubmit.find(".task-progress").addClass("d-none");
+
+                var $btnCancel = $("#btn-task-cancel");
                 $btnCancel.addClass('disabled');
-                $btnCancel.unbind("click"); // avoid stack grow
-                var $btnRevoke = $("#btn-form-revoke");
+                $btnCancel.find(".task-progress").addClass("d-none");
+
+                var $btnRevoke = $("#btn-task-revoke");
                 $btnRevoke.addClass('disabled');
-                $btnRevoke.unbind("click");
+                $btnRevoke.find(".task-progress").addClass("d-none");
             };
 
             cmdasyncform.ajax("form#taskform", {
                 beforeSubmit: function(arr, $form, options) {
-                    var $button = $form.find('button[type=submit]');
-                    if ($button.hasClass('disabled'))
+                    var $btnSubmit = $form.find('#btn-task-submit');
+                    if ($btnSubmit.hasClass('disabled'))
                         return false;
-                    $button.addClass('disabled');
+                    $btnSubmit.addClass('disabled');
 
-                    var $btnCancel = $("#btn-form-cancel");
+                    var $btnCancel = $form.find("#btn-task-cancel");
                     $btnCancel.removeClass('disabled');
-                    $btnCancel.click(function() {
-                        cmdasyncform.update_abort();
-                        $(this).addClass('disabled');
-                    });
 
-                    var $btnRevoke = $("#btn-form-revoke");
+                    var $btnRevoke = $form.find("#btn-task-revoke");
                     $btnRevoke.removeClass('disabled');
-                    $btnRevoke.click(cmdasyncform.revoke_task.bind(cmdasyncform));
                 },
                 error: function(xhr) {
                     requestErrorClean();
@@ -107,7 +109,7 @@
                             break;
                         case 400:
                             var data = xhr.responseJSON;
-                            var $input, $inputParent;
+                            var $input;
                             var $error = $("#alert-message");
                             $error.addClass("alert-danger");
                             var $feedback = $('<div class="invalid-feedback"></div>');
@@ -124,11 +126,6 @@
             cmdasyncform.add_event_callback("updating", function($form) {
                 var count = $form.data("count") + 1;
                 $("#taskOutput").text("{% trans "Running command..." %}");
-                var $progress = $("#task-progress");
-                $progress.find("div.progress-bar")
-                    .css("width", count + "%")
-                    .attr('aria-valuenow', count);
-                $progress.show();
                 if (count > 100) count = 0;
                 $form.data("count", count);
             });
@@ -196,27 +193,27 @@
                 </div>
                 <div class="form-group">
                     {{ form.as_ul }}
-                    <button type="submit" id="task-submit" class="btn btn-success">Execute</button>
-                    <button type="button" id="btn-form-cancel"
-                            class="btn btn-warning disabled">{% trans "Cancel" %}</button>
-                    <button type="button" id="btn-form-revoke"
-                            class="btn btn-danger disabled">{% trans "Revoke" %}</button>
+                    <button class="btn btn-success" type="submit" id="btn-task-submit">
+                      <span class="spinner-grow spinner-grow-sm d-none task-progress" role="status" aria-hidden="true"></span>
+                      Execute
+                    </button>
+
+                    <button class="btn btn-warning disabled" type="button" id="btn-task-cancel">
+                        <span class="spinner-grow spinner-grow-sm d-none task-progress" role="status" aria-hidden="true"></span>
+                        {% trans "Cancel" %}
+                    </button>
+
+                     <button class="btn btn-danger disabled" type="button" id="btn-task-revoke">
+                        <span class="spinner-grow spinner-grow-sm d-none task-progress" role="status" aria-hidden="true"></span>
+                        {% trans "Revoke" %}
+                    </button>
                 </div>
             </form>
         </div>
         <div class="card-footer">
-            <div class="progress" id="task-progress" style="display: none">
-              <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
-                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                <span class="sr-only"></span>
-              </div>
-            </div>
-            <div class="input-group">
-                <input type="button" id="taskCopy" class="btn btn-primary btn-sm taskCopy" value="{% trans "Copy" %}">
-            </div>
             <pre id="taskOutput" >{% trans "Execute a command" %}</pre>
             <div class="input-group">
-                <input type="button" id="taskCopy2" class="btn btn-primary btn-sm taskCopy" value="{% trans "Copy" %}">
+            <input type="button" id="taskCopy2" class="btn btn-primary btn-sm taskCopy" value="{% trans "Copy" %}">
             </div>
         </div>
     </div>
