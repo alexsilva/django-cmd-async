@@ -1,0 +1,21 @@
+{% load staticfiles %}
+{% load i18n %}
+<div class="form-group form-task-args-md">
+    <div class="input-group mb-1">
+        <div class="input-group-prepend">
+            <div class="input-group-text" id="btnGroupAddon">{% trans "args" %}</div>
+        </div>
+        <label for="task-args"></label>
+        <input type="text" id="task-args" class="form-control" autocomplete="off"
+               placeholder="{% trans "Insert arguments" %}" aria-describedby="btnGroupAddon">
+    </div>
+
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <div class="input-group-text" id="btnGroupAddon1">{% trans "kwargs" %}</div>
+        </div>
+        <label for="task-kwargs"></label>
+        <input type="text" id="task-kwargs" class="form-control" autocomplete="off"
+               placeholder="{% trans "Insert arguments" %}" aria-describedby="btnGroupAddon1">
+    </div>
+</div>
