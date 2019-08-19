@@ -65,16 +65,15 @@
             {% endif %}
 
             $("#btn-task-cancel").click(function () {
-                var $btnCancel = $(this);
-                cmdasyncform.update_abort();
+                var $btnCancel = $(this).prop('disabled', true);
                 $btnCancel.find(".task-progress").removeClass("d-none");
-                $btnCancel.addClass('disabled');
+                cmdasyncform.update_abort();
             });
 
             $("#btn-task-revoke").click(function () {
-                var $btnRevoke = $(this);
-                cmdasyncform.revoke_task.bind(cmdasyncform)();
+                var $btnRevoke = $(this).prop('disabled', true);
                 $btnRevoke.find(".task-progress").removeClass("d-none");
+                cmdasyncform.revoke_task.bind(cmdasyncform)();
             });
 
             var requestErrorClean = function() {
@@ -85,13 +84,13 @@
             };
 
             var requestUpdateFinish = function() {
-                var $btnSubmit = $('#btn-task-submit').removeClass('disabled');
+                var $btnSubmit = $('#btn-task-submit').prop('disabled', false);
                 $btnSubmit.find(".task-progress").addClass("d-none");
 
-                var $btnCancel = $("#btn-task-cancel").addClass('disabled');
+                var $btnCancel = $("#btn-task-cancel").prop('disabled', true);
                 $btnCancel.find(".task-progress").addClass("d-none");
 
-                var $btnRevoke = $("#btn-task-revoke").addClass('disabled');
+                var $btnRevoke = $("#btn-task-revoke").prop('disabled', true);
                 $btnRevoke.find(".task-progress").addClass("d-none");
 
                 // show/hide copy button
@@ -101,15 +100,11 @@
             cmdasyncform.ajax("form#taskform", {
                 beforeSubmit: function(arr, $form, options) {
                     var $btnSubmit = $form.find('#btn-task-submit');
-                    if ($btnSubmit.hasClass('disabled'))
+                    if ($btnSubmit.attr('disabled'))
                         return false;
-                    $btnSubmit.addClass('disabled');
-
-                    var $btnCancel = $form.find("#btn-task-cancel");
-                    $btnCancel.removeClass('disabled');
-
-                    var $btnRevoke = $form.find("#btn-task-revoke");
-                    $btnRevoke.removeClass('disabled');
+                    $btnSubmit.prop('disabled', true);
+                    $form.find("#btn-task-cancel").prop('disabled', false);
+                    $form.find("#btn-task-revoke").prop('disabled', false);
                 },
                 error: function(xhr) {
                     requestErrorClean();
@@ -121,10 +116,7 @@
                             window.location = url.join("");
                             break;
                         case 400:
-                            var data = xhr.responseJSON;
-                            var $input;
-                            var $error = $("#alert-message");
-                            $error.addClass("alert-danger");
+                            var $input, data = xhr.responseJSON;
                             var $feedback = $('<div class="invalid-feedback"></div>');
                             for (var name in data.form.errors) {
                                 $input = $("#" + rel_inputs[name]);
@@ -188,12 +180,12 @@
                       Execute
                     </button>
 
-                    <button class="btn btn-warning disabled" type="button" id="btn-task-cancel">
+                    <button class="btn btn-warning" type="button" id="btn-task-cancel" disabled>
                         <span class="spinner-grow spinner-grow-sm d-none task-progress" role="status" aria-hidden="true"></span>
                         {% trans "Cancel" %}
                     </button>
 
-                     <button class="btn btn-danger disabled" type="button" id="btn-task-revoke">
+                     <button class="btn btn-danger" type="button" id="btn-task-revoke" disabled>
                         <span class="spinner-grow spinner-grow-sm d-none task-progress" role="status" aria-hidden="true"></span>
                         {% trans "Revoke" %}
                     </button>
