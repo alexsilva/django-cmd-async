@@ -8,10 +8,14 @@
        <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="{% static "cmdasync/styles.css" %}">
     <script type="application/javascript" src="{% static "cmdasync/js/cmdhandler.js" %}"></script>
+    {% if settings.COMMANDS_ASYNC_WORKERS_STATUS_CHECK %}
     <script type="application/javascript" src="{% static 'cmdasync/js/celery.workers.status.js' %}"></script>
+    {% endif %}
     <script type="application/javascript">
         $(document).ready(function () {
+            {% if settings.COMMANDS_ASYNC_WORKERS_STATUS_CHECK %}
             workers_check_status();
+            {% endif %}
             cmdasyncform.init("#task-output");
             var rel_inputs = {
                 'args': 'task-args',
