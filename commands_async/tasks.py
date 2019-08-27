@@ -31,7 +31,8 @@ class Output(object):
 
 
 @shared_task(ignore_result=False,
-             track_started=True)
+             track_started=True,
+             retries=0)
 def command_exec(name, *args, **kwargs):
     """ Run a Django command by name """
     stream = Output(StringIO.StringIO())
