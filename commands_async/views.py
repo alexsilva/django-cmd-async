@@ -75,9 +75,6 @@ class TaskFormView(FormView):
         command_args = form.cleaned_data['args']
         command_kwargs = form.cleaned_data['kwargs']
 
-        # setup task priority to execute
-        command_kwargs['priority'] = settings.COMMANDS_ASYNC_TASK_PRIORITY
-
         if not self.is_command_valid(app_command, app_name=form.app_name) or not self.has_permission():
             if not self.request.is_ajax():
                 raise PermissionDenied  # Can not execute this command.
@@ -86,7 +83,9 @@ class TaskFormView(FormView):
                     'form': {'errors': {'app_command': [_("not allowed to run this command")]}}
                 }, status=400)
         try:
-            task = command_exec.delay(app_command, *command_args, **command_kwargs)
+            task = command_exec.apply_async(args=(app_command,) + command_args,
+                                            kwargs=command_kwargs,
+                                            priority=settings.COMMANDS_ASYNC_TASK_PRIORITY)
         except:
             logger.exception('failed to execute {0!s}'.format(app_command))
             task = None
