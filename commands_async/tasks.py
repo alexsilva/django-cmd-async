@@ -5,6 +5,7 @@ from celery.utils.log import get_task_logger
 from django.core.management import call_command
 import sys
 
+from commands_async import settings
 
 logger = get_task_logger(__name__)
 
@@ -32,7 +33,7 @@ class Output(object):
 
 @shared_task(ignore_result=False,
              track_started=True,
-             retries=0)
+             **settings.COMMANDS_ASYNC_TASK_OPTIONS)
 def command_exec(name, *args, **kwargs):
     """ Run a Django command by name """
     stream = Output(StringIO.StringIO())

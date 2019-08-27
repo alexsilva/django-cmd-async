@@ -74,6 +74,10 @@ class TaskFormView(FormView):
         app_command = form.cleaned_data['app_command']
         command_args = form.cleaned_data['args']
         command_kwargs = form.cleaned_data['kwargs']
+
+        # setup task priority to execute
+        command_kwargs['priority'] = settings.COMMANDS_ASYNC_TASK_PRIORITY
+
         if not self.is_command_valid(app_command, app_name=form.app_name) or not self.has_permission():
             if not self.request.is_ajax():
                 raise PermissionDenied  # Can not execute this command.
