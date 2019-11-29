@@ -36,14 +36,11 @@ class Output(object):
              **settings.COMMANDS_ASYNC_TASK_OPTIONS)
 def command_exec(name, *args, **kwargs):
     """ Run a Django command by name """
-    stream = Output(StringIO.StringIO())
-    try:
-        with stream:
-            kwargs['stdout'] = stream
-            try:
-                call_command(name, *args, **kwargs)
-            except SystemExit as err:
-                if hasattr(err, 'code') and err.code != 0:
-                    raise
-    finally:
-        return str(stream)
+    with Output(StringIO.StringIO()) as stream:
+        kwargs['stdout'] = stream
+        try:
+            call_command(name, *args, **kwargs)
+            return str(stream)
+        except SystemExit as err:
+            if hasattr(err, 'code') and err.code != 0:
+                raise
