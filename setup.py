@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='django-cmd-async',
-    version='1.0.0',
+    version='1.0.1',
     packages=['commands_async'],
     url='https://github.com/alexsilva/django-cmd-async',
     license='MIT',
