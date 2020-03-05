@@ -1,4 +1,4 @@
-import StringIO
+from io import StringIO
 
 from celery import shared_task
 from celery.utils.log import get_task_logger
@@ -36,7 +36,7 @@ class Output(object):
              **settings.COMMANDS_ASYNC_TASK_OPTIONS)
 def command_exec(name, *args, **kwargs):
     """ Run a Django command by name """
-    with Output(StringIO.StringIO()) as stream:
+    with Output(StringIO()) as stream:
         kwargs['stdout'] = stream
         try:
             call_command(name, *args, **kwargs)
