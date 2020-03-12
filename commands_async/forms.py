@@ -33,7 +33,7 @@ class TaskForm(forms.Form):
     def clean_args(self):
         command_args = self.cleaned_data['args']
         command_args = command_args.strip("() ")
-        if isinstance(command_args, (str, unicode)):
+        if isinstance(command_args, str):
             if not command_args.startswith("["):
                 command_args = "[" + command_args
             if not command_args.endswith("]"):
@@ -47,7 +47,7 @@ class TaskForm(forms.Form):
     def clean_kwargs(self):
         command_kwargs = self.cleaned_data['kwargs']
         command_kwargs = command_kwargs.strip()
-        if isinstance(command_kwargs, (str, unicode)):
+        if isinstance(command_kwargs, str):
             if not command_kwargs.startswith("{"):
                 command_kwargs = "{" + command_kwargs
             if not command_kwargs.endswith("}"):
