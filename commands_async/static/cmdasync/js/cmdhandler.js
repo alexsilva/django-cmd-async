@@ -66,9 +66,9 @@ cmdasyncform = {
                 if (task.ready) {
                     $output.empty();
                     if (!task.failed) {
-                        $output.append(task.output)
+                        $output.append($("<div/>").text(task.output).html());
                     } else {
-                        $output.append(task.traceback)
+                        $output.append($("<div/>").text(task.traceback).html());
                     }
                     if (self.debug) {
                         $output.prepend("arguments(" + self.$form.serialize()  + ")\n");
