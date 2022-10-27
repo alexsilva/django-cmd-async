@@ -1,6 +1,5 @@
 # coding=utf-8
 import collections
-from celery.task.control import revoke
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 from django.http import JsonResponse
@@ -9,7 +8,7 @@ from celery.result import AsyncResult
 from .forms import TaskForm
 from django.core.management import get_commands
 from commands_async.tasks import command_exec, logger
-from celery import current_app
+from celery import current_app as celery_app
 from . import settings
 
 
@@ -112,7 +111,7 @@ class CeleryWorkerStatus(View):
     def get(self, request, **kwargs):
         data = {'status': True, 'workers': []}
         try:
-            for worker in current_app.control.inspect().active():
+            for worker in celery_app.control.inspect().active():
                 data['workers'].append(worker)
         except Exception as err:
             data['status'] = False
@@ -125,7 +124,7 @@ class TaskFormStatus(View):
     def get(self, request, **kwargs):
         """Reports task status"""
         task_id = str(kwargs.get("task_id"))
-        async_result = AsyncResult(id=task_id, app=current_app)
+        async_result = AsyncResult(id=task_id, app=celery_app)
         data = {
             'task': {
                 'id': async_result.id,
@@ -143,7 +142,7 @@ class TaskFormStatus(View):
     def post(self, request, **kwargs):
         task_id = kwargs.get('task_id')
         try:
-            revoke(task_id, terminate=True)
+            celery_app.control.revoke(task_id, terminate=True)
             data = {"status": True}
         except Exception as err:
             data = {"status": False, "error": str(err)}
