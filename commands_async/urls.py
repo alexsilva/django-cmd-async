@@ -1,5 +1,8 @@
 # coding=utf-8
-from django.conf.urls import url, include
+try:
+    from django.urls import include, re_path as url
+except ImportError:
+    from django.conf.urls import url, include
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from . import views, settings

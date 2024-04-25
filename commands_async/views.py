@@ -1,7 +1,7 @@
 # coding=utf-8
 import collections
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.http import JsonResponse
 from django.views.generic import FormView, View
 from celery.result import AsyncResult
